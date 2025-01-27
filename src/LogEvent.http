@@ -1,0 +1,6 @@
+@LogEvent_HostAddress = http://localhost:5262
+
+POST {{LogEvent_HostAddress}}/log/?eventName=sample%20event&security=123
+Accept: application/json
+
+###
