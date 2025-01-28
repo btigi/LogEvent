@@ -15,11 +15,11 @@ app.MapGet("/test", () =>
     return Results.Ok();
 });
 
-app.MapPost("/log", async (string eventname, string security) =>
+app.MapPost("/log", async (string? category, string eventname, string security) =>
 {
     if (securityKey == security)
     {
-        await SaveEvent(eventname);
+        await SaveEvent(category ?? string.Empty, eventname);
         return Results.Created();
     }
     return Results.Unauthorized();
@@ -36,6 +36,7 @@ async Task InitializeDatabase()
     var keysTableQuery = @"
                         CREATE TABLE IF NOT EXISTS LogEvents (
                             Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            EventCategory TEXT,
                             EventName TEXT NOT NULL,
                             Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
                         )";
@@ -45,12 +46,13 @@ async Task InitializeDatabase()
     await connection.CloseAsync();
 }
 
-async Task SaveEvent(string eventName)
+async Task SaveEvent(string eventCategory, string eventName)
 {
     using var connection = new SQLiteConnection(connectionString);
     await connection.OpenAsync();
-    var insertQuery = "INSERT INTO LogEvents (EventName) VALUES (@eventName)";
+    var insertQuery = "INSERT INTO LogEvents (EventCategory, EventName) VALUES (@eventCategory, @eventName)";
     using var insertCmd = new SQLiteCommand(insertQuery, connection);
+    insertCmd.Parameters.AddWithValue("@eventCategory", eventCategory);
     insertCmd.Parameters.AddWithValue("@eventName", eventName);
     await insertCmd.ExecuteNonQueryAsync();
     await connection.CloseAsync();

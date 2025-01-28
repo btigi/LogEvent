@@ -32,12 +32,14 @@ The appsettings.json file contains three settings:
 
 ## Usage
 ``` 
-POST https://your-url.ext?eventname=run&security=0abdd994-bbb2-4874-affc-2eb73bee05d4
+POST https://your-url.ext?eventname=run&security=0abdd994-bbb2-4874-affc-2eb73bee05d4&category=test
 ```
 
 - `eventname` - the name of the event
 
 - `security` - the security key
+
+- `category` - an optional category
 
 The event is logged to the database only if the security key matches the value defined in config.
 
