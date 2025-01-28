@@ -15,7 +15,7 @@ app.MapGet("/test", () =>
     return Results.Ok();
 });
 
-app.MapPost("/log", async (string? category, string eventname, string security) =>
+app.MapGet("/log", async (string? category, string eventname, string security) =>
 {
     if (securityKey == security)
     {
